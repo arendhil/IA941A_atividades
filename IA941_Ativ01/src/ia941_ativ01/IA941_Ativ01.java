@@ -7,7 +7,8 @@ package ia941_ativ01;
 
 /**
  *
- * @author ia941
+ * @author "Marcelo F. Rigon"
+ * @since 03/11/2019
  */
 public class IA941_Ativ01 {
 
@@ -15,7 +16,7 @@ public class IA941_Ativ01 {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        // TODO code application logic here
+        WorldConnection wc = new WorldConnection();
+        wc.setVisible(true);
     }
-    
 }
