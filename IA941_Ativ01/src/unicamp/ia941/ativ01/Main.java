@@ -3,14 +3,14 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package ia941_ativ01;
+package unicamp.ia941.ativ01;
 
 /**
  *
  * @author "Marcelo F. Rigon"
  * @since 03/11/2019
  */
-public class IA941_Ativ01 {
+public class Main {
 
     /**
      * @param args the command line arguments

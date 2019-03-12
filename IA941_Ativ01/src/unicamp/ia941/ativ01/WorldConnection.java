@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package ia941_ativ01;
+package unicamp.ia941.ativ01;
 
 import java.awt.Graphics;
 import java.awt.event.KeyEvent;
@@ -18,12 +18,14 @@ import ws3dproxy.model.Creature;
 import ws3dproxy.model.Thing;
 import ws3dproxy.model.World;
 import ws3dproxy.model.WorldPoint;
+import ws3dproxy.util.Constants;
 
 /**
  *
  * @author ia941
  */
 public class WorldConnection extends JFrame implements KeyListener {
+    Logger log;
     public WS3DProxy proxy;
     float V_SPEED = 1f;
     Creature player;
@@ -33,6 +35,7 @@ public class WorldConnection extends JFrame implements KeyListener {
     float eatDistance = 2f;
     
     public WorldConnection() {
+        log = Logger.getLogger("WorldConnection");
         proxy = new WS3DProxy();
         try {
             w = World.getInstance();
@@ -49,7 +52,8 @@ public class WorldConnection extends JFrame implements KeyListener {
             //main loop
             addKeyListener(this);
         } catch (CommandExecException e) {
-            System.out.println("Erro capturado"); 
+            System.out.println("Erro capturado");
+            System.out.println(e.getMessage());
         }
         
     }
@@ -77,8 +81,7 @@ public class WorldConnection extends JFrame implements KeyListener {
                 player.move(V_Y, V_Y, rotation);
                 player.start();
             }
-            
-            
+
             //player.move(V_SPEED, V_X, V_X);
         } catch (CommandExecException ex) {
             Logger.getLogger(WorldConnection.class.getName()).log(Level.SEVERE, null, ex);
@@ -91,9 +94,16 @@ public class WorldConnection extends JFrame implements KeyListener {
     }
     
     void eat() {
+        log.info("Trying to eat something.");
         List<Thing> things = player.getThingsInVision();
         for (int i = 0; i < things.size(); i++) {
             //if (distance(things.get(i).))
+            Thing t = things.get(i);
+            if ((t.getCategory() == Constants.categoryNPFOOD) || (t.getCategory() == Constants.categoryPFOOD)) {
+                //is food, can eat
+                log.info("Found food in sight! Yummy");
+                log.info(t.getAttributes().toString());
+            }
         }
         //player.eatIt();
     }
@@ -132,8 +142,8 @@ public class WorldConnection extends JFrame implements KeyListener {
         } else if (e.getKeyCode() == KeyEvent.VK_DOWN) {
             V_Y += +1;
         }
-        
-        if (e.getKeyCode() == e.VK_E)
+
+        if (e.getKeyChar()=='e')
             eat();
         
         repaint();
