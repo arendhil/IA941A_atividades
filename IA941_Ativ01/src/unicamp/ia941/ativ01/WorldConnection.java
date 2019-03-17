@@ -10,6 +10,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.util.ArrayList;
 import java.util.List;
 import javax.swing.Timer;
 import java.util.Random;
@@ -38,10 +39,13 @@ public class WorldConnection extends JFrame implements KeyListener {
     World w;
     byte motionDirection = 0;
     double actionDistance = 45.0;
+
+    List<Thing> hiddenItems;
     
     public WorldConnection() {
         proxy = new WS3DProxy();
         randgen = new Random();
+        hiddenItems = new ArrayList<Thing>();
     }
 
     public void initialize() {
@@ -49,10 +53,6 @@ public class WorldConnection extends JFrame implements KeyListener {
             w = World.getInstance();
             w.reset();
             player = proxy.createCreature(100,450,0);
-            
-            WorldPoint position = player.getPosition();
-            double pitch = player.getPitch();
-            double fuel = player.getFuel();
 
             player.genLeaflet();
             World.setDeliverySpot(w.getEnvironmentWidth()/2.0, w.getEnvironmentHeight()/2.0);
@@ -132,12 +132,16 @@ public class WorldConnection extends JFrame implements KeyListener {
     }
     
     public void createThingsSpawner() {
-        Timer timer = new Timer(10000, new ActionListener() {
+        Timer timer = new Timer(1000, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                WorldPoint pos = World.getRandomTarget();
-                double rand = randgen.nextDouble();
                 try {
+                    if (World.getWorldEntities().size() > 15) {
+                        return;
+                    }
+                    WorldPoint pos = World.getRandomTarget();
+                    double rand = randgen.nextDouble();
+
                     if (rand < 0.3) {
                         World.createFood(randgen.nextInt(2), pos.getX(), pos.getY());
                     } else {
@@ -160,19 +164,16 @@ public class WorldConnection extends JFrame implements KeyListener {
     void unhideThing() {
         try {
             player.updateState();
-            List<Thing> things = player.getThingsInCameraFrustrum();
-            System.out.println("Trying to unhide things. "+things.size()+" in sight.");
-            for (int i = 0; i < things.size(); i++) {
-                //if (distance(things.get(i).))
-                Thing t = things.get(i);
-                if (isThingActionable(t.getCategory())) {
-                    double dist = this.distanceFromPoint(t.getCenterPosition());
-                    if (t.hidden && (dist < this.actionDistance)) {
-                        //grab just one item per action top.
-                        player.unhideIt(t.getName());
-                        System.out.println("Thing unhidden at: "+t.getCenterPosition()+" name: "+t.getName());
-                        return;
-                    }
+            System.out.println("Trying to unhide things. "+hiddenItems.size()+" known hidden.");
+            for (int i = 0; i < hiddenItems.size(); i++) {
+                Thing t = hiddenItems.get(i);
+                double dist = this.distanceFromPoint(t.getCenterPosition());
+                if (dist < this.actionDistance) {
+                    //grab just one item per action top.
+                    player.unhideIt(t.getName());
+                    hiddenItems.remove(i);
+                    System.out.println("Thing unhidden at: "+t.getCenterPosition()+" name: "+t.getName());
+                    return;
                 }
             }
         } catch(CommandExecException e) {
@@ -192,6 +193,7 @@ public class WorldConnection extends JFrame implements KeyListener {
                     double dist = this.distanceFromPoint(t.getCenterPosition());
                     if (dist < this.actionDistance) {
                         //grab just one item per action top.
+                        hiddenItems.add(t);
                         player.hideIt(t.getName());
                         System.out.println("Thing hidden at: " + t.getCenterPosition() + " name: " + t.getName());
                         return;
@@ -211,8 +213,10 @@ public class WorldConnection extends JFrame implements KeyListener {
             if (distanceFromPoint(World.getDeliverySpot()) < actionDistance) {
                 List<Leaflet> leafs = player.getLeaflets();
                 for (int i = 0; i < leafs.size(); i++) {
-                    player.deliverLeaflet(leafs.get(i).getID().toString());
-                    System.out.println("Leaflets: "+leafs.get(i).toString());
+                    Leaflet l = leafs.get(i);
+                    player.deliverLeaflet(l.getID().toString());
+                    player.updateLeaflet(l.getID(), l.getItems(), l.getSituation());
+                    System.out.println("Leaflets: "+l.toString());
                 }
             }
         } catch(CommandExecException e) {
@@ -223,6 +227,10 @@ public class WorldConnection extends JFrame implements KeyListener {
 
     void move() {
         try {
+            if (player.getFuel() <= 0) {
+                System.out.println("No more fuel, can't move. Game Over.");
+                return;
+            }
             // motion calculation
             float rotation = 0f;
             float V_X = 0;
@@ -243,7 +251,7 @@ public class WorldConnection extends JFrame implements KeyListener {
             }
 
             //send motion command
-            if (V_Y <= 0) {
+            if (V_Y == 0) {
                 if (rotation == 0)
                     player.stop();
                 else {
@@ -298,6 +306,7 @@ public class WorldConnection extends JFrame implements KeyListener {
                 }
             }
             // no food in sight, but we may have something in the bag.
+            player.updateBag();
             Bag bag = player.getBag();
             if (bag.getTotalNumberFood() > 0) {
                 //there is food in the bag, we should eat it.
