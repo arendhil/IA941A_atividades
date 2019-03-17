@@ -18,5 +18,6 @@ public class Main {
     public static void main(String[] args) {
         WorldConnection wc = new WorldConnection();
         wc.setVisible(true);
+        wc.initialize();
     }
 }
