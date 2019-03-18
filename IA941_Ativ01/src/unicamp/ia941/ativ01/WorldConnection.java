@@ -55,7 +55,9 @@ public class WorldConnection extends JFrame implements KeyListener {
             player = proxy.createCreature(100,450,0);
 
             player.genLeaflet();
-            World.setDeliverySpot(w.getEnvironmentWidth()/2.0, w.getEnvironmentHeight()/2.0);
+            WorldPoint delivery = new WorldPoint(w.getEnvironmentWidth()/2.0, w.getEnvironmentHeight()/2.0);
+            World.setDeliverySpot(delivery.getX(), delivery.getY());
+            World.createDeliverySpot(delivery.getX(), delivery.getY());
 
             //main loop
             addKeyListener(this);
