@@ -1,0 +1,15 @@
+sp {propose*initialize-water-jug
+   (state <s> ^superstate nil
+             -^name)
+-->
+   (<s> ^operator <o> +)
+   (<o> ^name initialize-water-jug)
+}
+
+sp {apply*initialize-water-jug
+   (state <s> ^operator <op>)
+   (<op> ^name initialize-water-jug)
+-->
+   (<s> ^name water-jug)
+}
+
