@@ -10,6 +10,12 @@ sp {apply*initialize-water-jug
    (state <s> ^operator <op>)
    (<op> ^name initialize-water-jug)
 -->
-   (<s> ^name water-jug)
+   (<s> ^name water-jug
+        ^jug <j1>
+        ^jug <j2>)
+   (<j1> ^volume 5
+         ^contents 0)
+   (<j2> ^volume 3
+         ^contents 0)
 }
 
