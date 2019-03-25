@@ -1,0 +1,21 @@
+sp {eaters*propose*move-north
+   (state <s> ^io.input-link.eater <e>)
+   (<e> ^x <x> ^y <y>)
+-->
+   (<s> ^operator <o> +)
+   (<o> ^name move-north)}
+
+sp {eaters*apply*move-north
+   (state <s> ^operator.name move-north
+              ^io.output-link <out>)
+-->
+   (<out> ^move <move>)
+   (<move> ^direction north)}
+
+sp {eaters*apply*remove-move
+   (state <s> ^operator.name move-north
+              ^io.output-link <out>)
+   (<out> ^move <move>)
+   (<move> ^status complete)
+-->
+   (<out> ^move <move> -)}

@@ -1,0 +1,15 @@
+sp {propose*initialize-eaters
+   (state <s> ^superstate nil
+             -^name)
+-->
+   (<s> ^operator <o> +)
+   (<o> ^name initialize-eaters)
+}
+
+sp {apply*initialize-eaters
+   (state <s> ^operator <op>)
+   (<op> ^name initialize-eaters)
+-->
+   (<s> ^name eaters)
+}
+

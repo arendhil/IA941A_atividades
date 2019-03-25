@@ -1,0 +1,38 @@
+########################## Move - to - food : operator #######################################
+# propose*move-to-food
+# Move to the direction of a normal-food or bonus-food
+#
+# apply*move-to-food
+# If there is any proposal of move-to-food, move.
+#
+# apply*move-to-food*remove-move
+# Remove completed motions from the WME.
+###############################################################################################
+
+sp {propose*move-to-food
+   (state <s> ^io.input-link.my-location <loc>)
+   (<loc> ^<mdir> <tile>)
+   (<tile> ^content { <type> << bonusfood normalfood >>})
+-->
+   (write (crlf) | Propose move to | <mdir> |, for |<type>)
+   (<s> ^operator <o> + =)
+   (<o> ^name move-to-food
+        ^direction <mdir>)}
+
+sp {apply*move-to-food
+   (state <s> ^operator <o>
+              ^io.output-link <out>)
+   (<o> ^name move-to-food
+        ^direction <mdir>)
+-->
+   (write (crlf) | Selected move to |<mdir>)
+   (<out> ^move.direction <mdir>)}
+
+
+sp {apply*remove-move
+   (state <s> ^operator.name move-to-food
+              ^io.output-link <out>)
+   (<out> ^move <move>)
+   (<move> ^status complete)
+-->
+   (<out> ^move <move> -)}

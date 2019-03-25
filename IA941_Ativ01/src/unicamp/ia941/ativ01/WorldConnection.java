@@ -160,7 +160,8 @@ public class WorldConnection extends JFrame implements KeyListener {
     @Override
     public void paint(Graphics g) {
         super.paint(g); //To change body of generated methods, choose Tools | Templates.
-        move();
+        if (player != null)
+            move();
     }
 
     void unhideThing() {
@@ -216,6 +217,7 @@ public class WorldConnection extends JFrame implements KeyListener {
                 List<Leaflet> leafs = player.getLeaflets();
                 for (int i = 0; i < leafs.size(); i++) {
                     Leaflet l = leafs.get(i);
+                    
                     player.deliverLeaflet(l.getID().toString());
                     player.updateLeaflet(l.getID(), l.getItems(), l.getSituation());
                     System.out.println("Leaflets: "+l.toString());
