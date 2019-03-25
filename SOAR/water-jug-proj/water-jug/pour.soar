@@ -1,0 +1,48 @@
+sp {water-jug*propose*pour
+   (state <s> ^name water-jug
+              ^jug <i>
+              ^jug { <j> <> <i>})
+   (<j> ^contents > 0)
+   (<i> ^empty > 0)
+-->
+   (<s> ^operator <op> + =)
+   (<op> ^name pour
+         ^empty-jug <j>
+         ^fill-jug <i>)
+}
+
+sp {water-jug*apply*will-empty-empty-jug
+   (state <s> ^name water-jug
+        ^operator <o>)
+   (<o> ^name pour
+        ^empty-jug <i>
+        ^fill-jug <j>)
+   (<j> ^volume <jvol>
+        ^contents <jcon>
+        ^empty <jempty>)
+   (<i> ^volume <ivol>
+        ^contents {<icon> <= <jempty>})
+-->
+   (<i> ^contents 0
+        ^contents <icon> -)
+   (<j> ^contents (+ <jcon> <icon>)
+        ^contents <jcon> -)
+}
+
+sp {water-jug*apply*will-not-empty-empty-jug
+   (state <s> ^name water-jug
+        ^operator <o>)
+   (<o> ^name pour
+        ^empty-jug <i>
+        ^fill-jug <j>)
+   (<j> ^volume <jvol>
+        ^contents <jcon>
+        ^empty <jempty>)
+   (<i> ^volume <ivol>
+        ^contents {<icon> > <jempty>})
+-->
+   (<i> ^contents (- <jcon> <jempty>)
+        ^contents <icon> -)
+   (<j> ^contents <jvol>
+        ^contents <jcon> -)
+}

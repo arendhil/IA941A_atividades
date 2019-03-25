@@ -1,0 +1,8 @@
+sp {water-jug*detect*end-state
+   (state <s> ^name water-jug
+              ^jug <j>)
+   (<j> ^volume 3
+        ^contents 1)
+-->
+   (write (crlf) | The problem was solved.|)
+   (halt)}
