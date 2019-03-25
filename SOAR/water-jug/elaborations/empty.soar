@@ -1,0 +1,10 @@
+
+sp {water-jug*elaborate*empty
+   (state <s> ^name water-jug
+              ^jug <j>)
+   (<j> ^volume <v>
+        ^contents <c>)
+-->
+   (<j> ^empty (- <v> <c>))
+}
+
