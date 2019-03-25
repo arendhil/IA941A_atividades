@@ -1,4 +1,4 @@
-17
+23
 SOAR_ID 0
 SOAR_ID 1
 SOAR_ID 2
@@ -16,12 +16,21 @@ INTEGER_RANGE 13 -2147483648 2147483647
 INTEGER_RANGE 14 -2147483648 2147483647
 INTEGER_RANGE 15 -2147483648 2147483647
 STRING 16
-17
+SOAR_ID 17
+ENUMERATION 18 1 fill
+SOAR_ID 19
+ENUMERATION 20 1 empty
+SOAR_ID 21
+ENUMERATION 22 1 pour
+27
 0 io 1
 0 jug 8
 0 jug 9
 0 name 16
 0 operator 4
+0 operator 17
+0 operator 19
+0 operator 21
 0 superstate 6
 0 top-state 0
 0 type 5
@@ -34,3 +43,10 @@ STRING 16
 9 contents 11
 9 empty 12
 9 volume 10
+17 fill-jug 9
+17 name 18
+19 empty-jug 9
+19 name 20
+21 empty-jug 9
+21 fill-jug 8
+21 name 22

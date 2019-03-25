@@ -1,0 +1,9 @@
+sp {water-jug*propose*empty
+   (state <s> ^name water-jug
+              ^jug <j>)
+   (<j> ^contents > 0)
+-->
+   (<s> ^operator <op> +)
+   (<op> ^name empty
+         ^empty-jug <j>)
+}
